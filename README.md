@@ -1,5 +1,8 @@
 A basic Image Gallery app with live searching and infinite scroll feature using React, Ant Design
 
+## Live Demo
+
+https://react-imgallery.netlify.app/
 
 ## Local Setup
 
