@@ -35,9 +35,9 @@ describe("ProductItem", () => {
     );
 
     expect(screen.getByTestId("product-title").innerHTML).toBe("test-title");
-    expect(screen.getByAltText("product thumbnail").src).toContain(
-      "test-thumbnail"
-    );
+    expect(
+      screen.getByAltText("product thumbnail").getAttribute("src")
+    ).toContain("test-thumbnail");
   });
   it("should render Preview if clicked the thumbnail", async () => {
     const id = "test-id";
