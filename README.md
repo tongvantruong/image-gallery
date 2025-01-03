@@ -1,4 +1,4 @@
-A basic Image Gallery app with live searching and infinite scroll feature
+A basic Image Gallery app with live searching and infinite scroll feature using React, Ant Design
 
 
 ## Local Setup
