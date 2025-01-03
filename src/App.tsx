@@ -7,10 +7,13 @@ import { debounce, throttle } from "lodash";
 import { SearchOutlined } from "@ant-design/icons";
 
 const LIMIT: number = 20 as const;
+const SEARCH_TIMEOUT: number = 500 as const;
+const SCROLL_TIMEOUT: number = 500 as const;
+const SCROLL_NEAR_BOTTOM: number = 100 as const;
 
 function App() {
   const [searchedText, setSearchedText] = useState<string>("");
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [images, setImages] = useState<Product[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -22,20 +25,19 @@ function App() {
 
   useEffect(() => {
     const initImages = async () => {
+      setImages(() => []);
+      setPage(() => 1);
+      setTotal(() => 0);
       setIsLoading(() => true);
       const response = await fetch(
         `https://dummyjson.com/products/search?limit=20&&q=${searchedText}`
       );
       const json = await response.json();
       setImages(() => json.products);
-      setPage((prevPage) => prevPage + 1);
       setTotal(() => json.total);
       setIsLoading(() => false);
     };
 
-    setImages(() => []);
-    setPage(() => 0);
-    setTotal(() => 0);
     initImages();
   }, [searchedText]);
 
@@ -56,22 +58,23 @@ function App() {
       const { scrollTop, scrollHeight, clientHeight } =
         document.documentElement;
 
-      if (scrollTop + clientHeight > scrollHeight - 100) {
+      if (scrollTop + clientHeight > scrollHeight - SCROLL_NEAR_BOTTOM) {
+        console.log(page);
         fetchImages({ limit: LIMIT, skip: page * LIMIT });
       }
     };
 
-    const debouncedHandleScroll = throttle(handleScroll, 300);
+    const debouncedHandleScroll = throttle(handleScroll, SCROLL_TIMEOUT);
 
     window.addEventListener("scroll", debouncedHandleScroll);
     return () => window.removeEventListener("scroll", debouncedHandleScroll);
-  }, [page]);
+  }, [page, isLoading]);
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchedText(() => e.target.value);
   };
 
-  const debouncedOnSearch = debounce(onSearch, 500);
+  const debouncedOnSearch = debounce(onSearch, SEARCH_TIMEOUT);
 
   return (
     <>
