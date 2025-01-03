@@ -1,0 +1,9 @@
+.app__search-bar {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 9;
+    width: 100%;            
+    border-bottom: 1px solid #cdcdcd;
+    padding-bottom: 10px;
+}
